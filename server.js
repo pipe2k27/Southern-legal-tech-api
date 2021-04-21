@@ -17,7 +17,7 @@ app.use(cors());
 const router = Router();
 app.use(router);
 
-console.log(env.LALA)
+console.log(env.LOLA)
 
 // this is the main endpoint where our front end will be making requests
 router.use('/api/items', itemsEndpoint);
