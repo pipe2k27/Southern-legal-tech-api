@@ -2,8 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import Router from 'express-promise-router';
 import mercadopago from 'mercadopago';
-
+import mongoose from 'mongoose';
+import userEndpoint from './routes/users.js';
 import dotenv from 'dotenv';
+import jwt from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
 
 dotenv.config({ path: process.env.ENV_PATH || '.env' })
 
@@ -12,11 +15,40 @@ const { env } = process;
 const PORT = process.env.PORT || 8000;
 const app = express();
 
-mercadopago.configurations.setAccessToken(env.ML_TOKEN); 
-
-app.use(cors());
+app.use(cors({
+	origin: 'http://localhost:3000'
+	// origin: 'https://southern-legal-tech-mvp.vercel.app/'
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+export const jwtCheck = jwt({
+	secret: jwksRsa.expressJwtSecret({
+		cache: true,
+		rateLimit: true,
+		jwksRequestsPerMinute: 5,
+		jwksUri: 'https://andesdocs.us.auth0.com/.well-known/jwks.json'
+  }),
+  audience: 'https://andesdocs/api',
+  issuer: 'https://andesdocs.us.auth0.com/',
+  algorithms: ['RS256']
+});
+
+// app.use(jwtCheck);
+
+mercadopago.configurations.setAccessToken(env.ML_TOKEN); 
+
+
+
+// Mongo db Database Connection
+
+const dbUri = `mongodb+srv://AndesDocsDevelopment:${env.MONGO_DB}@andesdocs01.1iiry.mongodb.net/AndesDocs01?retryWrites=true&w=majority`;
+
+mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
+	.then((result)=>{ app.listen(PORT, () => console.log('app is live on port 8000'))})
+	.catch(e=>console.log(e));
+
+// Router Set up
 
 const router = Router();
 app.use(router);
@@ -25,12 +57,16 @@ app.get('/', async (req, res) => {
   res.send('Api is live.');
 });
 
-app.get('/', async (req, res) => {
-	res.send('Api is live.');
-  });
-  
-  app.get('/public-key', async (req, res) => {
-	res.status(400).send({id: env.ML_PUBLIC});
+
+// this is the main endpoint where our front end will be making requests
+router.use('/users', jwtCheck ,userEndpoint);
+
+
+
+
+
+app.get('/public-key', async (req, res) => {
+	res.status(200).send({id: env.ML_PUBLIC});
   });
 
 // pruebas de mercadopago
@@ -61,7 +97,7 @@ app.post("/pago", (req, res) => {
     items: [
 		{
 		  title: req.body.description,
-		  unit_price: 199.99,
+		  unit_price: 999,
 		  quantity: Number(req.body.quantity),
 		}
 	  ],
@@ -92,4 +128,4 @@ app.get('/feedback', function(request, response) {
 
 
 
-app.listen(PORT, () => console.log('app is live on port 8000'));
+
