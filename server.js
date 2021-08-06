@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 
 app.use(cors({
-	origin: 'http://localhost:3000'
-	// origin: 'https://southern-legal-tech-mvp.vercel.app/'
+	// origin: 'http://localhost:3000'
+	origin: 'https://southern-legal-tech-mvp.vercel.app/'
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
