@@ -9,10 +9,13 @@ const router = Router();
 
 router.post('/find-user', async (req, res) => {
   try {
+    console.log('entro la call')
     const findThisUser = await User.exists({sub: req.user.sub});
     if(findThisUser){
+      console.log('ya exisste')
       res.status(200).send({userExists: true});
     } else {
+      console.log('no existe')
       const newUser = new User({
         sub: req.user.sub,
         identifier: req.body.identifier,
@@ -23,6 +26,7 @@ router.post('/find-user', async (req, res) => {
     res.status(200).send({userExists: true, newCreatedUser: createdUser})
     }
   } catch (error) {
+    console.log('fallo la call')
     console.log(error.message);
     res.status(400).send({userExists: 'error'});
   }
