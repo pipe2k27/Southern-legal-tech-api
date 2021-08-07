@@ -126,10 +126,5 @@ app.get('/feedback', function(request, response) {
 });
 
 
-app.get('/test', (req,res)=>{
-	const respuesta = {answer: 'llego el test'}
-	res.send(respuesta);
-})
-
 
 
