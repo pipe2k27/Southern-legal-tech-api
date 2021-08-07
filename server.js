@@ -127,7 +127,7 @@ app.get('/feedback', function(request, response) {
 
 
 app.get('/test', (req,res)=>{
-	const respuesta = JSON.parse({answer: 'llego el test'})
+	const respuesta = {answer: 'llego el test'}
 	res.send(respuesta);
 })
 
