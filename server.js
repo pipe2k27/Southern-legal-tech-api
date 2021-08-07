@@ -15,10 +15,7 @@ const { env } = process;
 const PORT = process.env.PORT || 8000;
 const app = express();
 
-app.use(cors({
-	// origin: 'http://localhost:3000'
-	origin: 'https://southern-legal-tech-mvp.vercel.app'
-}));
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -73,27 +70,28 @@ app.get('/public-key', async (req, res) => {
 
 app.post("/pago", (req, res) => {
 
-	let preference = {
+	let preference;
 
-		// uncomment this for development
-
-    // items: [
-    //   {
-    //     title: req.body.description,
-    //     unit_price: 199.99,
-    //     quantity: Number(req.body.quantity),
-    //   }
-    // ],
-  	// back_urls: {
-	// 		"success": "http://localhost:3000/success",
-	// 		"failure": "http://localhost:3000/payment-failure",
-	// 		"pending": "http://localhost:3000/payment-failure"
-	// 	},
-	// 	auto_return: 'approved',
-	// };
-
+	if(env.ENV==='development'){
+	preference = {
+	// uncomment this for development
+    items: [
+      {
+        title: req.body.description,
+        unit_price: 999,
+        quantity: Number(req.body.quantity),
+      }
+    ],
+  	back_urls: {
+			"success": "http://localhost:3000/success",
+			"failure": "http://localhost:3000/payment-failure",
+			"pending": "http://localhost:3000/payment-failure"
+		},
+		auto_return: 'approved',
+	};
 	// use this for prod
-
+		} else {
+	preference = {
     items: [
 		{
 		  title: req.body.description,
@@ -108,6 +106,7 @@ app.post("/pago", (req, res) => {
 		  },
 		  auto_return: 'approved',
 	  };
+	}
   
 
 	mercadopago.preferences.create(preference)
@@ -126,6 +125,10 @@ app.get('/feedback', function(request, response) {
 	})
 });
 
+
+app.get('/test', (req,res)=>{
+	res.send('llego el test');
+})
 
 
 
