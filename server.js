@@ -40,7 +40,7 @@ mercadopago.configurations.setAccessToken(env.ML_TOKEN);
 const dbUri = `mongodb+srv://AndesDocsDevelopment:${env.MONGO_DB}@andesdocs01.1iiry.mongodb.net/AndesDocs01?retryWrites=true&w=majority`;
 
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => { app.listen(PORT, () => console.log('app is up on port 8000')); })
+  .then((result) => { app.listen(PORT, () => console.log('app is now live on port 8000')); })
   .catch((e) => console.log(e));
 
 // Router Set up
