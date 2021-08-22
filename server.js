@@ -92,9 +92,9 @@ app.post('/pago', (req, res) => {
         },
       ],
       back_urls: {
-        success: 'https://southern-legal-tech-mvp.vercel.app/success',
-        failure: 'https://southern-legal-tech-mvp.vercel.app/payment-failure',
-        pending: 'https://southern-legal-tech-mvp.vercel.app/payment-failure',
+        success: 'https://andesdocs.com/success',
+        failure: 'https://andesdocs.com/payment-failure',
+        pending: 'https://andesdocs.com/payment-failure',
       },
       auto_return: 'approved',
     };
