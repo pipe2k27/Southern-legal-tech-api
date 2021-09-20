@@ -87,7 +87,7 @@ app.post('/pago', (req, res) => {
       items: [
         {
           title: req.body.description,
-          unit_price: 999,
+          unit_price: 4999,
           quantity: Number(req.body.quantity),
         },
       ],
