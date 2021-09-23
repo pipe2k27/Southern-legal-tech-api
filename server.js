@@ -76,8 +76,8 @@ app.post('/pago', (req, res) => {
       ],
       back_urls: {
         success: 'http://localhost:3000/success',
-        failure: 'http://localhost:3000/payment-failure',
-        pending: 'http://localhost:3000/payment-failure',
+        failure: 'http://localhost:3000/payment-error',
+        pending: 'http://localhost:3000/payment-error',
       },
       auto_return: 'approved',
     };
@@ -93,8 +93,8 @@ app.post('/pago', (req, res) => {
       ],
       back_urls: {
         success: 'https://andesdocs.com/success',
-        failure: 'https://andesdocs.com/payment-failure',
-        pending: 'https://andesdocs.com/payment-failure',
+        failure: 'https://andesdocs.com/payment-error',
+        pending: 'https://andesdocs.com/payment-error',
       },
       auto_return: 'approved',
     };
