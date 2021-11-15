@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import jwt from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import userEndpoint from './routes/Users/users.js';
+import documentsEndpoint from './routes/Users/document.js';
 
 dotenv.config({ path: process.env.ENV_PATH || '.env' });
 
@@ -39,6 +40,8 @@ mercadopago.configurations.setAccessToken(env.ML_TOKEN);
 
 const dbUri = `mongodb+srv://AndesDocsDevelopment:${env.MONGO_DB}@andesdocs01.1iiry.mongodb.net/AndesDocs01?retryWrites=true&w=majority`;
 
+// const dbUri = `mongodb+srv://AndesDocsDevelopment:${env.MONGO_DB}@andesdocs01.1iiry.mongodb.net/Development?retryWrites=true&w=majority`;
+
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => { app.listen(PORT, () => console.log('app now live on port 8000')); })
   .catch((e) => console.log(e));
@@ -54,6 +57,7 @@ app.get('/', async (req, res) => {
 
 // this is the main endpoint where our front end will be making requests
 router.use('/users', jwtCheck, userEndpoint);
+router.use('/documents', jwtCheck, documentsEndpoint);
 
 app.get('/public-key', async (req, res) => {
   res.status(200).send({ id: env.ML_PUBLIC });

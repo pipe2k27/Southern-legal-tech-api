@@ -10,15 +10,14 @@ const router = Router();
 router.post('/find-user', async (req, res) => {
   try {
     const isExistingUser = await userExists(req.user.sub);
-    console.log(isExistingUser);
     if (isExistingUser) {
       res.status(200).send({ userExists: true });
     } else {
-      console.log('entro a new');
       const newUser = new User({
         sub: req.user.sub,
         identifier: req.body.identifier,
         email: req.body.email,
+        documents: [],
       });
       const createdUser = await newUser.save();
       res.status(200).send({ userExists: true, newCreatedUser: createdUser });
@@ -35,6 +34,26 @@ router.get('/get-user', async (req, res) => {
       const findThisUser = await User.findOne({ sub: req.user.sub });
       if (findThisUser) {
         res.status(200).send({ userExists: true, foundUser: findThisUser });
+      } else {
+        res.status(200).send({ userExists: false });
+      }
+    }
+  } catch (error) {
+    res.status(400).send({ userExists: 'error' });
+  }
+});
+
+router.get('/get-user-documents', async (req, res) => {
+  try {
+    const isExistingUser = await userExists(req.user.sub);
+    if (isExistingUser) {
+      const findThisUser = await User.findOne({ sub: req.user.sub });
+      if (findThisUser.documents) {
+        res.status(200).send({ userExists: true, foundUser: findThisUser });
+      } else if (findThisUser && !findThisUser.documents) {
+        await User.updateOne({ sub: req.user.sub }, {
+          documents: [],
+        });
       } else {
         res.status(200).send({ userExists: false });
       }
@@ -90,7 +109,6 @@ router.post('/use-one-contract', async (req, res) => {
       res.status(200).send({ userExists: false });
     }
   } catch (error) {
-    console.log(error.message);
     res.status(400).send({ contractUsed: 'error' });
   }
 });
