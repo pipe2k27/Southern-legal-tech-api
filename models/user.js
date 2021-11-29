@@ -53,6 +53,17 @@ const userSchema = new Schema({
     required: false,
     default: [],
   },
+  saved: {
+    type: [{
+      sessionUrl: String,
+      currentSection: String,
+      answers: Object,
+      date: String,
+    }],
+    required: false,
+    default: [],
+  },
+
 }, { timestamps: true });
 
 export const User = mongoose.model('andesUser', userSchema);

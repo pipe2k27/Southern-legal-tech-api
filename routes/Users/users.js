@@ -113,4 +113,37 @@ router.post('/use-one-contract', async (req, res) => {
   }
 });
 
+router.post('/save-progress', async (req, res) => {
+  try {
+    const isExistingUser = await userExists(req.user.sub);
+    if (isExistingUser) {
+      const findThisUser = await User.findOne({ sub: req.user.sub });
+      let updateThisUser;
+      if (findThisUser.saved && findThisUser.saved.length > 0 && findThisUser.saved.length < 4) {
+        updateThisUser = await User.updateOne({ sub: req.user.sub }, {
+          saved: [req.body.saved, ...findThisUser.saved],
+        });
+      } else if (findThisUser.saved && findThisUser.saved.length > 3) {
+        const shortenedArray = findThisUser.saved;
+        shortenedArray.pop();
+
+        updateThisUser = await User.updateOne({ sub: req.user.sub }, {
+          saved: [req.body.saved, ...shortenedArray],
+        });
+      } else {
+        updateThisUser = await User.updateOne({ sub: req.user.sub }, {
+          saved: [req.body.saved],
+        });
+      }
+      if (updateThisUser) {
+        res.status(200).send({ saved: true });
+      }
+    } else {
+      res.status(200).send({ saved: false });
+    }
+  } catch (error) {
+    res.status(400).send({ saved: 'error' });
+  }
+});
+
 export default router;
